@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
 /**
  *
@@ -9,7 +5,6 @@
  */
 import java.sql.PreparedStatement;
 import java.sql.Connection;
-import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,10 +16,12 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
 
-    public String cadastrarProduto(ProdutosDTO produto) {
-
+    private void conectar() {
         conn = new conectaDAO().connectDB();
+    }
 
+    public String cadastrarProduto(ProdutosDTO produto) {
+        conectar();
         try {
             prep = conn.prepareStatement("INSERT INTO produtos VALUES(?,?,?,?)");
             prep.setInt(1, 0);// para o sgbd controlar o id
@@ -40,7 +37,7 @@ public class ProdutosDAO {
     }
 
     public ArrayList<ProdutosDTO> listarProdutos() {
-        conn = new conectaDAO().connectDB();
+        conectar();
         try {
             prep = conn.prepareStatement("SELECT * FROM produtos");
             resultset = prep.executeQuery();
@@ -60,4 +57,52 @@ public class ProdutosDAO {
         return listagem;
     }
 
+    public String venderProduto(int id) {
+        try {
+            conectar();
+
+            prep = conn.prepareStatement("UPDATE produtos SET status = 'Vendido' WHERE produtos.id = ?");
+            prep.setInt(1, id);
+            prep.executeUpdate();
+            return "Atualizado com sucesso";
+        } catch (SQLException e) {
+            return "Erro ao atualizar";
+        }
+    }
+
+     public ArrayList<ProdutosDTO> listarProdutosVendidos() {
+     try {
+            conectar();
+
+            prep = conn.prepareStatement("SELECT * FROM produtos WHERE produtos.status = 'Vendido'"); // somente os Vendidos
+            resultset = prep.executeQuery();
+
+            while (resultset.next()) {
+                ProdutosDTO produto = new ProdutosDTO();
+                produto.setId(resultset.getInt("id"));
+                produto.setNome(resultset.getString("nome"));
+                produto.setValor(resultset.getInt("valor"));
+                produto.setStatus(resultset.getString("status"));
+                listagem.add(produto);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("erro " + e.getMessage());
+        }
+
+        return listagem;  
+    }
+     
+      public String cancelarVenda(int id) {
+        try {
+            conectar();
+
+            prep = conn.prepareStatement("UPDATE produtos SET status = 'A Venda' WHERE produtos.id = ?");
+            prep.setInt(1, id);
+            prep.executeUpdate();
+            return "Atualizado com sucesso";
+        } catch (SQLException e) {
+            return "Erro ao atualizar";
+        }
+    }
 }

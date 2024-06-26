@@ -143,12 +143,18 @@ public class vendasVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarVendaActionPerformed
-        String id = id_produto_venda.getText();
+        try {
+            String id = id_produto_venda.getText();
+
+            ProdutosDAO produtosdao = new ProdutosDAO();
+
+            jLbResposta.setText(produtosdao.cancelarVenda(Integer.parseInt(id)));
+            listarProdutos();
+        } catch (Exception e) {
+             jLbResposta.setText("Selecione na lista acima");
+        }
         
-        ProdutosDAO produtosdao = new ProdutosDAO();
         
-        jLbResposta.setText(produtosdao.cancelarVenda(Integer.parseInt(id)));
-        listarProdutos();
     }//GEN-LAST:event_btnCancelarVendaActionPerformed
 
     private void btnListaProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaProdutosActionPerformed

@@ -92,4 +92,17 @@ public class ProdutosDAO {
 
         return listagem;  
     }
+     
+      public String cancelarVenda(int id) {
+        try {
+            conectar();
+
+            prep = conn.prepareStatement("UPDATE produtos SET status = 'A Venda' WHERE produtos.id = ?");
+            prep.setInt(1, id);
+            prep.executeUpdate();
+            return "Atualizado com sucesso";
+        } catch (SQLException e) {
+            return "Erro ao atualizar";
+        }
+    }
 }

@@ -150,29 +150,35 @@ public class cadastroVIEW extends javax.swing.JFrame {
 
     private void cadastroNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroNomeActionPerformed
         
-        
+
     }//GEN-LAST:event_cadastroNomeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         try {
             ProdutosDTO produto = new ProdutosDTO();
             String nome = cadastroNome.getText();
-            String valor = cadastroValor.getText();
-            String status = "A Venda";
-            produto.setNome(nome);
-            produto.setValor(Integer.parseInt(valor));
-            produto.setStatus(status);
-
-            ProdutosDAO produtodao = new ProdutosDAO();
-            jLbResposta.setText(produtodao.cadastrarProduto(produto));
-        } catch (Exception e) {
-            jLbResposta.setText("Verifique os dados informados.");
+            if (!nome.isBlank()) {
+                String valor = cadastroValor.getText();
+                String status = "A Venda";
+                produto.setNome(nome);
+                produto.setValor(Integer.parseInt(valor));
+                produto.setStatus(status);
+                
+                ProdutosDAO produtodao = new ProdutosDAO();
+                jLbResposta.setText(produtodao.cadastrarProduto(produto));
+            } else {
+                jLbResposta.setText("Informe o nome do produto.");
+                cadastroNome.requestFocus();
+            }
+            
+        } catch (NumberFormatException e) {
+            jLbResposta.setText("Somente números inteiros");
         }
 
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
-        listagemVIEW listagem = new listagemVIEW(); 
+        listagemVIEW listagem = new listagemVIEW();        
         listagem.setVisible(true);
     }//GEN-LAST:event_btnProdutosActionPerformed
 
